@@ -138,9 +138,107 @@ const Details = () => {
     }) 
   }
 
+  //To Put Focus On Comment When Comment Icon is Clicked.
  const  CommentClicked =()=>{
    ref_comment?.current?.focus();
  }
+
+ const HandleLikeDislike=(val,blogId)=>
+  {
+    if(val=="like")
+    {
+      axios({
+        method:"POST",
+        url:localStorage.api_url+"api/v1/blog/UpVoteBlog?blogId="+blogId,
+        headers:({'Content-Type':'application/json','Authorization': `Bearer ${localStorage.token}`}),
+        data:{}
+      }).then((function(response)
+      {
+        LoadBlogData()
+      })).catch(function(error){
+        if(error.response!=undefined)
+          {
+            if(error.response?.status==401)
+              {
+               // navigate("/login")
+              }
+              console.log(error)
+          }
+      }) 
+    }
+    else
+    {
+      axios({
+        method:"POST",
+        url:localStorage.api_url+"api/v1/blog/DownVoteBlog?blogId="+blogId,
+        headers:({'Content-Type':'application/json','Authorization': `Bearer ${localStorage.token}`}),
+        data:{}
+      }).then((function(response)
+      {
+         LoadBlogData()
+        // console.log(response.data)
+      })).catch(function(error){
+        if(error.response!=undefined)
+        {
+          if(error.response?.status==401)
+            {
+             // navigate("/login")
+            }
+            console.log(error)
+        }
+      })
+    }
+  }
+
+  const HandleCommentLikeDislike =(commentid,click)=>{
+  alert(commentid)
+  alert(click)
+    if(click=="like")
+    {
+      axios({
+        method:"POST",
+        url:localStorage.api_url+"api/v1/blog/UpVoteBlogcomment?commentid="+commentid,
+        headers:({'Content-Type':'application/json','Authorization': `Bearer ${localStorage.token}`}),
+        data:{}
+      }).then((function(response)
+      {
+        LoadBlogData()
+      })).catch(function(error){
+        if(error.response!=undefined)
+          {
+            if(error.response?.status==401)
+              {
+               // navigate("/login")
+              }
+              console.log(error)
+          }
+      }) 
+    }
+    else
+    {
+      axios({
+        method:"POST",
+        url:localStorage.api_url+"api/v1/blog/DownVoteBlogComment?commentid="+commentid,
+        headers:({'Content-Type':'application/json','Authorization': `Bearer ${localStorage.token}`}),
+        data:{}
+      }).then((function(response)
+      {
+         LoadBlogData()
+        // console.log(response.data)
+      })).catch(function(error){
+        if(error.response!=undefined)
+        {
+          if(error.response?.status==401)
+            {
+             // navigate("/login")
+            }
+            console.log(error)
+        }
+      })
+    }
+
+  }
+
 
   return (
     <div>
@@ -181,15 +279,22 @@ const Details = () => {
                   </article>
                   <div className="comments">
                     <hr />
-                    <div className="reaction d-flex justify-content-evenly align-items-center">
+                    <div className="reaction d-flex justify-content-evenly align-items-center" style={{fontSize:"15px"}}>
                       <h4 className="comments-count">
-                        <a onClick={()=>{CommentClicked()}}><BiComment className="me-2" /> {post.commentText}</a>  
+                        <a onClick={()=>{CommentClicked()}}><BiComment className="me-2" />{post.comment_count || 0}</a>  
                       </h4>
                       <h4 className="comments-count">
-                        <BiLike className="me-2" /> {post.blog_like}
+                        <BiLike 
+                          onClick={()=>{HandleLikeDislike("like",post.blogId)}}
+                          className="me-2"
+                         /> {post.blog_like}
                       </h4>
                       <h4 className="comments-count">
-                        <BiDislike className="ms-2" /> {post.blog_dislike}
+                        <BiDislike 
+                          className="ms-2" 
+                          onClick={()=>{HandleLikeDislike("dislike",post.blogId)}}
+                        />
+                         {post.blog_dislike}
                       </h4>
                     </div>
                     {post.comments && post.comments.map((comment) => (
@@ -198,11 +303,12 @@ const Details = () => {
                         id={`comment-${comment.commentId}`}
                         className="comment post-author"
                       >
-                        <div className="d-flex align-items-end justify-content-end">
+                         <div className="d-flex align-items-end justify-content-end" style={{fontSize:"15px"}}>
                           <div className="like">
                             <BiLike
                               className="me-2"
                               onClick={() => {
+                                HandleCommentLikeDislike(comment.commentId,"like")
                                 // Handle like button click
                               }}
                             />
@@ -212,6 +318,7 @@ const Details = () => {
                             <BiDislike
                               className="ms-2"
                               onClick={() => {
+                                HandleCommentLikeDislike(comment.commentId,"dislike")
                                 // Handle dislike button click
                               }}
                             />

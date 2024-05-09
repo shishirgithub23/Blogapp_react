@@ -48,6 +48,52 @@ function Blog() {
     navigate("/details",{state:blogId})
   }
 
+  const HandleLikeDislike=(val,blogId)=>
+    {
+  
+      if(val=="like")
+      {
+        axios({
+          method:"POST",
+          url:localStorage.api_url+"api/v1/blog/UpVoteBlog?blogId="+blogId,
+          headers:({'Content-Type':'application/json','Authorization': `Bearer ${localStorage.token}`}),
+          data:{}
+        }).then((function(response)
+        {
+          LoadBlog()
+          // console.log(response.data)
+        })).catch(function(error){
+          if(error.response!=undefined)
+            {
+              if(error.response?.status==401)
+                {
+                  navigate("/login")
+                }
+                console.log(error)
+            }
+        }) 
+      }
+      else
+      {
+        axios({
+          method:"POST",
+          url:localStorage.api_url+"api/v1/blog/DownVoteBlog?blogId="+blogId,
+          headers:({'Content-Type':'application/json','Authorization': `Bearer ${localStorage.token}`}),
+          data:{}
+        }).then((function(response)
+        {
+          LoadBlog()
+          // console.log(response.data)
+        })).catch(function(error){
+          if(error.response?.status==401)
+          {
+            navigate("/login")
+          }
+          console.log(error)
+        })
+      }
+    }
+
   return (
     <div>
       <NavBar />
@@ -90,9 +136,7 @@ function Blog() {
                           <BiLike
                             className="me-2"
                             onClick={() =>
-                              setLikeStatus((prevStatus) =>
-                                prevStatus === "like" ? null : "like"
-                              )
+                              HandleLikeDislike("like",post.blogId)
                             }
                           />
                           {likeStatus === "like" && (
@@ -105,9 +149,7 @@ function Blog() {
                           <BiDislike
                             className="ms-2"
                             onClick={() =>
-                              setLikeStatus((prevStatus) =>
-                                prevStatus === "dislike" ? null : "dislike"
-                              )
+                              HandleLikeDislike("dislike",post.blogId)
                             }
                           />
                           {likeStatus === "dislike" && (

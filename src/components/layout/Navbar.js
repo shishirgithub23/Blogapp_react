@@ -1,7 +1,7 @@
 import React, { useContext, useEffect, useRef ,useState} from "react";
 import './navbar.css';
 import { BiMenu } from "react-icons/bi";
-import { Link, useLocation } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import ManageProfilePage from "../../dashboardpage/ProfilePage/ManageProfilePage";
 import { useFormik } from "formik";
 import * as Yup from "yup";
@@ -9,6 +9,7 @@ import axios from "axios";
 import {toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { AppContext } from "../../App";
+import { IoIosNotifications } from "react-icons/io";
 
 var initialValues={
   currentPassword:'',
@@ -25,7 +26,7 @@ const ShowNotificationModal  =({CloseNotificationModal})=>{
     <>
         <div class="modal-body">
           <div>
-            <div class="row">
+            <div class="row" style={{fontSize:"20px"}}>
               <div class="col-md-12">
                    {
                     notification && notification.map((x,i)=>(
@@ -39,7 +40,12 @@ const ShowNotificationModal  =({CloseNotificationModal})=>{
 
                         <tr>
                           <th scope="row">{i+1}</th>
-                          <td colSpan={4}>{x.notification_text}</td>
+                          <td colSpan={4}>
+                            {x.notification_title}
+                            {
+                              x.notification_text
+                            }
+                           </td>
                         </tr>
                       </tbody>
                     </table>
@@ -191,6 +197,10 @@ const ChangePasswordModal =({closePasswordChangeModal})=>{
 }
 
 const NavBar = () => {
+
+  var navigate=useNavigate()
+  var {notification}=useContext(AppContext)
+
   const mobileNavShow = useRef(null);
   const mobileNavHide = useRef(null);
   const location = useLocation();
@@ -237,9 +247,9 @@ const NavBar = () => {
   }
 
   const LogOutUser = () => {
-    //navigate("/")
     localStorage.clear();
     window.location.reload();
+    navigate("/")
   };
 
   return (
@@ -328,7 +338,6 @@ const NavBar = () => {
                 </div>
               </li>
             <li>
-              
             </li>
           </>
           :
@@ -339,7 +348,7 @@ const NavBar = () => {
         {
            localStorage.role!=undefined && (localStorage.role=="ADMIN" || localStorage.role=="BLOGGER") ?
             <>
-              <a className="nav-link scrollto" onClick={()=>{setShowNotification(true)}}>Notification</a>
+              <a className="nav-link scrollto" onClick={()=>{setShowNotification(true)}}><IoIosNotifications style={{fontSize:"20px"}} /><sup style={{fontSize:"20px", color:"red"}}>{notification  && notification?.length}</sup></a>
             </>
             :
             <>
