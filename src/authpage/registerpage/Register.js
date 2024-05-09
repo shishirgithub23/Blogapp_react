@@ -2,6 +2,8 @@ import React from 'react'
 import { Formik, Form, Field, ErrorMessage } from 'formik';
 import * as Yup from 'yup';
 import { Link } from "react-router-dom"; // Import the Link component from react-router-dom
+import axios from 'axios';
+import { useNavigate } from "react-router-dom";
 
 const RegisterSchema = Yup.object().shape({
   email: Yup.string()
@@ -21,6 +23,28 @@ const RegisterSchema = Yup.object().shape({
 
 function Register() {
 
+    const navigate = useNavigate();
+
+    const HandleSignup =(values)=>{
+        var input_data={
+            'UserName':values.username,
+            'Password':values.password,
+            'Email':values.email
+        }
+        axios({
+          method:"POST",
+          url:localStorage.api_url+"api/v1/Auth/register",
+          headers:({'Content-Type':'application/json'}),
+          data:input_data
+        }).then((function(response)
+        {
+          alert("User Registered Successfully.")
+          navigate("/login")
+        })).catch(function(error){
+            console.log(error)
+        }) 
+    }
+
   return (
     <div>
         <div className="vh-100" >
@@ -39,10 +63,11 @@ function Register() {
                         initialValues={{ email: '', username: '', password: '', confirmPassword: '' }}
                         validationSchema={RegisterSchema}
                         onSubmit={(values, { setSubmitting }) => {
-                            setTimeout(() => {
-                            alert(JSON.stringify(values, null, 2));
-                            setSubmitting(false);
-                            }, 400);
+                            HandleSignup(values)
+                            // setTimeout(() => {
+                            // alert(JSON.stringify(values, null, 2));
+                            // setSubmitting(false);
+                            // }, 400);
                         }}
                         >
                         {({ isSubmitting }) => (

@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { FaThumbsUp, FaThumbsDown } from "react-icons/fa";
 import NavBar from "../components/layout/Navbar";
 import icecream from "../image/bg.avif";
@@ -7,67 +7,134 @@ import { Link } from "react-router-dom";
 import Footer from "../components/layout/Footer";
 import { BiComment } from "react-icons/bi"; // Import BiComment component
 import { BiLike, BiDislike } from "react-icons/bi";
+import axios from "axios";
+import { GetDateTime } from "../Library/Common";
+import { useNavigate } from 'react-router-dom';
+
 
 const Home = () => {
+
+  const navigate = useNavigate();
+
   const [likeStatus, setLikeStatus] = useState(null);
   const [likeNumber, setLikeNumber] = useState(0); // Initialize likeNumber to 0
   const [dislikeNumber, setDislikeNumber] = useState(0); // Initialize dislikeNumber to 0
-
-  const [CommentNumber, setCommentNumber] = useState(0); // Initialize commentNumber to 0
-  const categories = [
-    "all",
-    "ice-cream",
-    "chocolate",
-    "cake",
-    "juice",
-    "sandwich",
-  ];
-
-  const posts = [
-    {
-      title: "Blog Title 1",
-      details: "Blog Details 1",
-      image: icecream,
-      category: "ice-cream",
-      likes: 0,
-      dislikes: 0,
-      comments: 0,
-      blogger: "Blogger Name",
-      date: "2022-01-01",
-    },
-    {
-      title: "Blog Title 1",
-      details: "Blog Details 1",
-      image: icecream,
-      category: "ice-cream",
-      likes: 0,
-      dislikes: 0,
-      comments: 0,
-      blogger: "Blogger Name",
-      date: "2022-01-01",
-    },
-    {
-      title: "hero",
-      details: "Blog Details 2",
-      image: icecream,
-      category: "chocolate",
-      likes: 1,
-      dislikes: 3,
-      comments: 4,
-      blogger: "Blogger Name",
-      date: "2022-01-01",
-    },
-   
-    // Add more posts here
-  ];
-
   const [likes, setLikes] = useState(0);
   const [dislikes, setDislikes] = useState(0);
-  const [category, setCategory] = useState("all");
+  //  const [category, setCategory] = useState("all");
+  const [CommentNumber, setCommentNumber] = useState(0); // Initialize commentNumber to 0
 
-  const handleCategoryClick = (cat) => {
-    setCategory(cat === "" ? "" : cat);
+  const [categories, setCategory] = useState([]);
+  const [categoriesBackup, setCategoryBackup] = useState([]);
+
+  const [filterByCategoryId,setFilerByCategoryId]=useState(0)
+  const [posts,setPosts]=useState([])
+  const [filteredPost,setFilteredPost]=useState([])
+
+  const LoadAllBlogs=()=>{
+    axios({
+      method:"GET",
+      url:localStorage.api_url+"api/v1/blog/getblogs",
+      headers:({'Content-Type':'application/json'}),
+      data:{}
+    }).then((function(response)
+    {
+      setPosts(response.data)
+      setFilteredPost(response.data)
+    })).catch(function(error){
+      if(error!=undefined && error!=null)
+      {
+        if(error.response?.status==401)
+          {
+            navigate("/login")
+          }
+          console.log(error) 
+      }
+      
+    }) 
+  }
+  
+  const LoadAllCategory=()=>{
+    axios
+      .get(localStorage.api_url+"api/v1/Category")
+      .then(function (response) {
+        setCategory(response.data || []);
+        setCategoryBackup(response.data || []);
+      })
+      .catch(function (error) {
+        
+        if(error.response?.status==401)
+          {
+            navigate("/login")
+          }
+        console.log(error);
+      })
+      .finally(function () {
+      });
+  }
+
+  useEffect(() => {
+    LoadAllBlogs()
+    LoadAllCategory()
+  }, []);
+
+  const handleCategoryClick = (categoryId) => {
+    setFilerByCategoryId(categoryId)
+
+    setFilteredPost(posts.filter(x=>x.categoryId==categoryId))
   };
+
+
+  const ReadMore =(blogId)=>{
+    navigate("/details",{state:blogId})
+  }
+
+  const HandleLikeDislike=(val,blogId)=>
+  {
+
+    // setLikeStatus((prevStatus) =>
+    //   prevStatus === val? null : val
+    // )
+
+    if(val=="like")
+    {
+      axios({
+        method:"POST",
+        url:localStorage.api_url+"api/v1/blog/UpVoteBlog?blogId="+blogId,
+        headers:({'Content-Type':'application/json','Authorization': `Bearer ${localStorage.token}`}),
+        data:{}
+      }).then((function(response)
+      {
+        LoadAllBlogs()
+        // console.log(response.data)
+      })).catch(function(error){
+        if(error.response?.status==401)
+        {
+          navigate("/login")
+        }
+          console.log(error)
+      }) 
+    }
+    else
+    {
+      axios({
+        method:"POST",
+        url:localStorage.api_url+"api/v1/blog/DownVoteBlog?blogId="+blogId,
+        headers:({'Content-Type':'application/json','Authorization': `Bearer ${localStorage.token}`}),
+        data:{}
+      }).then((function(response)
+      {
+        LoadAllBlogs()
+        // console.log(response.data)
+      })).catch(function(error){
+        if(error.response?.status==401)
+        {
+          navigate("/login")
+        }
+        console.log(error)
+      })
+    }
+  }
 
   return (
     <div>
@@ -113,41 +180,40 @@ const Home = () => {
 
       <div className="gallery">
         <ul className="controls">
-          {categories.map((cat, index) => (
-            <li
-              className={`buttons ${cat === category ? "active" : ""}`}
-              data-filter={cat}
-              key={index}
-              onClick={() => handleCategoryClick(cat)}
-            >
-              {cat}
-            </li>
-          ))}
+          {categories && categories.map((cat, index) => (
+              <li
+                className={`buttons ${
+                  filterByCategoryId == cat.categoryId ? "active" : ""
+                }`}
+                key={index}
+                onClick={() => handleCategoryClick(cat.categoryId)}
+              >
+                {cat.categoryName}
+              </li>
+            ))}
         </ul>
         <div id="blog" className="blog">
           <div className="container" data-aos="fade-up" data-aos-delay={100}>
             <div className="row gy-4 posts-list">
-              {posts
-                .filter(
-                  (post) => category === "all" || post.category === category
-                )
-                .map((post, index) => (
-                  <div className="col-xl-4 col-md-6" key={index}>
+              {filteredPost && filteredPost.map((post, index) => (
+                  <div className="col-xl-4 col-md-6" key={post.blogId}>
                     <div className="post-item position-relative h-100">
                       <div className="post-img position-relative overflow-hidden">
-                        <img src={post.image} className="img-fluid" alt />
-                        <span className="post-date">{post.date}</span>
+                      <img src={localStorage.api_url+post.image} className="img-fluid" alt="Blog Image" />
+                        {/* <img src={post.image} className="img-fluid" alt /> */}
+                        <span className="post-date">{GetDateTime(post.createdAt)}</span>
                       </div>
                       <hr />
                       <div className="post_like">
                         <div className="like">
-                          <span className="me-2">{post.likes}</span>{" "}
+                          <span className="me-2">{post.blog_like}</span>{" "}
                           <BiLike
                             className="me-2"
                             onClick={() =>
-                              setLikeStatus((prevStatus) =>
-                                prevStatus === "like" ? null : "like"
-                              )
+                              HandleLikeDislike("like",post.blogId)
+                              // setLikeStatus((prevStatus) =>
+                              //   prevStatus === "like" ? null : "like"
+                              // )
                             }
                           />
                           {likeStatus === "like" && (
@@ -156,13 +222,14 @@ const Home = () => {
                           {/* add like number */}
                         </div>
                         <div className="dislike">
-                          <span className="ms-2">{post.dislikes}</span>{" "}
+                          <span className="ms-2">{post.blog_dislike}</span>{" "}
                           <BiDislike
                             className="ms-2"
                             onClick={() =>
-                              setLikeStatus((prevStatus) =>
-                                prevStatus === "dislike" ? null : "dislike"
-                              )
+                              HandleLikeDislike("dislike",post.blogId)
+                              // setLikeStatus((prevStatus) =>
+                              //   prevStatus === "dislike" ? null : "dislike"
+                              // )
                             }
                           />
                           {likeStatus === "dislike" && (
@@ -170,34 +237,30 @@ const Home = () => {
                           )}
                           {/* add dislike number */}
                         </div>
-                        <div className="comment">
+                        {/* <div className="comment">
                           <span className="ms-2">{post.comments}</span>{" "}
                           <BiComment className="ms-2" />
-                        </div>
+                        </div> */}
                       </div>
                       <hr />
                       <div className="post-content d-flex flex-column">
-                        <h3 className="post-title">{post.title} </h3>
+                        <h3 className="post-title">{post.blogTitle} </h3>
 
                         <div className="meta d-flex align-items-center">
                           <div className="d-flex align-items-center">
                             <i className="bi bi-person" />{" "}
-                            <span className="ps-2">{post.blogger}</span>
+                            <span className="ps-2">{post.userName}</span>
                           </div>
                           <span className="px-3 text-black-50">/</span>
                           <div className="d-flex align-items-center">
                             <i className="bi bi-folder2" />{" "}
-                            <span className="ps-2">{post.category}</span>
+                            <span className="ps-2">{post.categoryName}</span>
                           </div>
                         </div>
-                        <p>
-                        {post.details}
-                        </p>
+                        <p>{post.blogContent}</p>
                         <hr />
 
-                        <Link to="/details">
-                          <a className="nav-link scrollto">Read more</a>
-                        </Link>
+                        <a className="nav-link scrollto" onClick={()=>ReadMore(post.blogId)}>Read more</a>
                       </div>
                     </div>
                   </div>

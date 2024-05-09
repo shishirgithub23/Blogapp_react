@@ -189,7 +189,7 @@
 }
 
 .gallery .controls .buttons.active{
-    background:coral;
+    background:var(--color-primary);
     color:#fff;
 }
 
@@ -263,7 +263,7 @@
   }
   
   button {
-    background-color: #f5f6f7;
+    background-color: #000000;
     border: 1px solid #ccd0d5;
     border-radius: 3px;
     padding: 5px 10px;
@@ -271,5 +271,5 @@
   }
   
   button:hover {
-    background-color: #e9ebee;
+    background-color: #e6ff03;
   }

@@ -1,83 +1,146 @@
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faHeart } from "@fortawesome/free-solid-svg-icons";
 import { faThumbsDown } from "@fortawesome/free-solid-svg-icons";
-import { useParams } from "react-router-dom";
-import React, { useState, useEffect } from "react";
+// import { useParams } from "react-router-dom";
+import React, { useState, useEffect ,useRef} from "react";
 import NavBar from "../components/layout/Navbar";
 import "./details.css";
 import icecream from "../image/bg.avif";
 import { BiLike, BiDislike, BiComment } from "react-icons/bi";
+import { useLocation } from "react-router-dom";
+import axios from "axios";
+import { GetDateTime } from "../Library/Common";
+import { useFormik } from "formik";
+import * as Yup from "yup";
+
+const CommentSchema=Yup.object({
+  // name:Yup.string().required("Please Enter Your Name."),
+  // email:Yup.string().required("Please Enter Email").email("Please Enter Valid Email"),
+  comment:Yup.string().required("Please Enter Comment")
+});
 
 const Details = () => {
-  const posts = [
-    {
-      title: "Blog Title 1",
-      details: "Blog Details 1",
-      image: icecream,
-      category: "ice-cream",
-      likes: 0,
-      dislikes: 0,
-      comments: 0,
-      blogger: "Blogger Name",
-      date: "2022-01-01",
-    },
-  ];
-  const comments = [
-    {
-      id: 1,
-      date: "2022-01-01",
-      text: "Et rerum totam nisi. Molestiae vel quam dolorum vel voluptatem et et. Est ad aut sapiente quis molestiae est qui cum soluta. Vero aut rerum vel. Rerum quos laboriosam placeat ex qui. Sint qui facilis et.",
-      likeNumber: 10,
-      dislikeNumber: 5,
-      username: "Suman",
-    },
-    // Add more comments as needed
-  ];
-  const categories = [
-    { name: "General", postNumber: 25 },
-    { name: "Lifestyle", postNumber: 12 },
-    { name: "Travel", postNumber: 5 },
-    { name: "Design", postNumber: 22 },
-    { name: "Creative", postNumber: 8 },
-    { name: "Education", postNumber: 14 },
-  ];
-  const recentPosts = [
-    {
- 
-      title: "Nihil blanditiis at in nihil autem",
-      image: icecream,
-      date: "2020-01-01"
-    },
-    {
+
+  const initialValues={
+    comment:''
+  }
+
+  const location=useLocation();
+  const blogId=location.state ;
   
-      title: "Quidem autem et impedit",
-      image: icecream,
-      date: "2020-01-01"
-    },
-    {
- 
-      title: "Id quia et et ut maxime similique occaecati ut",
-      image: icecream,
-      date: "2020-01-01"
-    },
-    {
+  const [posts,setPosts]=useState([])
 
-      title: "Laborum corporis quo dara net para",
-      image: icecream,
-      date: "2020-01-01"
-    },
-    {
+  const [categories,setCategories]=useState([])
+  const [recentPosts,setRecentPosts]=useState([])
 
-      title: "Et dolores corrupti quae illo quod dolor",
-      image: icecream,
-      date: "2020-01-01"
+  //Ref
+  const ref_comment=useRef();
+  
+  useEffect(()=>{
+    LoadBlogCountBycategoryData()
+    LoadRecentBlogPostData()
+  },[])
+
+
+  const LoadRecentBlogPostData =()=>{
+      axios({
+        method:"GET",
+        url:localStorage.api_url+"api/v1/blog/GetRecentBlogPost",
+        headers:({'Content-Type':'application/json', 'Authorization': `Bearer ${localStorage.token}`}),
+        data:{}
+      }).then((function(response)
+      {
+        setRecentPosts(response.data)
+      })).catch(function(error){
+          console.log(error)
+      })
+  }
+
+  const LoadBlogCountBycategoryData =()=>{
+    axios({
+      method:"GET",
+      url: localStorage.api_url+"api/v1/blog/GetBlogInfoByCategory",
+      headers:({'Content-Type':'application/json', 'Authorization': `Bearer ${localStorage.token}`}),
+      data:{}
+    }).then((function(response)
+    {
+      // console.log(response.data)
+      setCategories(response.data)
+    })).catch(function(error){
+        console.log(error)
+    }) 
+  }
+
+
+  const LoadBlogData=()=>{
+    if((blogId || 0) >0)
+    {
+      axios({
+        method:"GET",
+        url:localStorage.api_url+"api/v1/blog/getBlogbyid?blogId="+blogId,
+        headers:({'Content-Type':'application/json', 'Authorization': `Bearer ${localStorage.token}`}),
+        data:{}
+      }).then((function(response)
+      {
+        setPosts(response.data)
+      })).catch(function(error){
+          console.log(error)
+      }) 
     }
-  ];
+  }
+
+  useEffect(()=>{
+    LoadBlogData()
+  },[blogId])
+
 
   const [commentNumber, setCommentNumber] = useState(0);
   const [likeStatus, setLikeStatus] = useState(null);
   const [likeNumber, setLikeNumber] = useState(0);
   const [dislikeNumber, setDislikeNumber] = useState(0);
+
+  
+  const {
+    values,
+    setValues,
+    errors,
+    touched,
+    handleBlur,
+    handleChange,
+    handleSubmit,
+    setFieldValue,
+    resetForm
+  } = useFormik({
+    initialValues,
+    validationSchema: CommentSchema,
+    onSubmit: (values, action) => {
+      HandleSubmit(values, action);
+    },
+  });
+
+  const HandleSubmit =(data, action)=>{
+     const input_data={
+        'blogId':blogId,
+        'CommentText':data.comment || ''
+     }
+     axios({
+      method:"POST",
+      url:localStorage.api_url+"api/v1/comments/postcomment",
+      headers:({'Content-Type':'application/json', 'Authorization': `Bearer ${localStorage.token}`}),
+      data:input_data
+    }).then((function(response)
+    {
+      alert("Blog Commented success!!")
+      resetForm()
+      LoadBlogData()
+    })).catch(function(error){
+        console.log(error)
+    }) 
+  }
+
+ const  CommentClicked =()=>{
+   ref_comment?.current?.focus();
+ }
 
   return (
     <div>
@@ -109,37 +172,30 @@ const Details = () => {
                 <div className="col-lg-8">
                   <article key={index} className="blog-details">
                     <div className="post-img">
-                      <img
-                        src={post.image}
-                        alt={post.title}
-                        className="img-fluid"
-                        style={{ width: "100%", objectFit: "contain" }}
-                      />
+                    <img src={localStorage.api_url+post.image} className="img-fluid"  alt={post.bogTitle}  style={{ width: "100%", objectFit: "contain" }}/>
                     </div>
-                    <h2 className="title">{post.title}</h2>
+                    <h2 className="title">{post.blogTitle}</h2>
                     <div className="content">
-                      <p>{post.details}</p>
+                      <p>{post.blogContent}</p>
                     </div>
                   </article>
-
                   <div className="comments">
                     <hr />
                     <div className="reaction d-flex justify-content-evenly align-items-center">
                       <h4 className="comments-count">
-                        <BiComment className="me-2" /> {post.comments}
+                        <a onClick={()=>{CommentClicked()}}><BiComment className="me-2" /> {post.commentText}</a>  
                       </h4>
                       <h4 className="comments-count">
-                        <BiLike className="me-2" /> {post.likes}
+                        <BiLike className="me-2" /> {post.blog_like}
                       </h4>
                       <h4 className="comments-count">
-                        <BiDislike className="ms-2" /> {post.dislikes}
+                        <BiDislike className="ms-2" /> {post.blog_dislike}
                       </h4>
                     </div>
-
-                    {comments.map((comment) => (
+                    {post.comments && post.comments.map((comment) => (
                       <div
-                        key={comment.id}
-                        id={`comment-${comment.id}`}
+                        key={comment.commentId}
+                        id={`comment-${comment.commentId}`}
                         className="comment post-author"
                       >
                         <div className="d-flex align-items-end justify-content-end">
@@ -150,7 +206,7 @@ const Details = () => {
                                 // Handle like button click
                               }}
                             />
-                            <span className="ms-2">{comment.likeNumber}</span>
+                            <span className="ms-2">{comment.commentLike}</span>
                           </div>
                           <div className="dislike ms-3">
                             <BiDislike
@@ -160,18 +216,18 @@ const Details = () => {
                               }}
                             />
                             <span className="ms-2">
-                              {comment.dislikeNumber}
+                              {comment.commnetDislike}
                             </span>
                           </div>
                         </div>
                         <div className="d-flex">
                           <div>
                             <strong style={{ fontSize: "x-large" }}>
-                              {comment.username}
+                              {comment.comment_UserName}
                             </strong>
 
-                            <time dateTime={comment.date}>{comment.date}</time>
-                            <p>{comment.text}</p>
+                            <time dateTime={comment.date}>{GetDateTime(comment.commentCreatedAt)}</time>
+                            <p>{comment.commentText}</p>
                           </div>
                         </div>
                       </div>
@@ -182,17 +238,20 @@ const Details = () => {
                     <div className="reply-form">
                       <h4>Leave a comment</h4>
                       <p>
-                        Your email address will not be published. Required
-                        fields are marked *{" "}
+                        {/* Your email address will not be published. */}
+                        Required fields are marked *{" "}
                       </p>
-                      <form action>
-                        <div className="row">
+                      <form onSubmit={handleSubmit}>
+                        {/* <div className="row">
                           <div className="col-md-6 form-group">
                             <input
                               name="name"
                               type="text"
                               className="form-control"
                               placeholder="Your Name*"
+                              value={values.name}
+                              onChange={handleChange}
+                              onBlur={handleBlur}
                             />
                           </div>
                           <div className="col-md-6 form-group">
@@ -201,17 +260,24 @@ const Details = () => {
                               type="text"
                               className="form-control"
                               placeholder="Your Email*"
+                              value={values.email}
+                              onChange={handleChange}
+                              onBlur={handleBlur}
                             />
                           </div>
-                        </div>
+                        </div> */}
 
                         <div className="row">
                           <div className="col form-group">
                             <textarea
+                              ref={ref_comment}
                               name="comment"
                               className="form-control"
                               placeholder="Your Comment*"
                               defaultValue={""}
+                              value={values.comment}
+                              onChange={handleChange}
+                              onBlur={handleBlur}
                             />
                           </div>
                         </div>
@@ -246,16 +312,17 @@ const Details = () => {
                       <div className="mt-3">
              
                         <div className="post-item mt-3">
-                          <img src={recentPosts.image} alt />
+                          <img src={localStorage.api_url+recentPosts.image} className="img-fluid" alt={"Blog Image"}/>
+                          {/* <img src={recentPosts.image} alt /> */}
                           <div>
                             <h4>
                               {recentPosts.title}
                             </h4>
-                            <time dateTime="2020-01-01"> {recentPosts.date}</time>
+                            <time dateTime={recentPosts.date}> {GetDateTime(recentPosts.date)}</time>
                           </div>
                         </div>
                       </div>
-                              ))}
+                     ))}
 
                     </div>
                     {/* End sidebar recent posts*/}

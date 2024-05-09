@@ -26,14 +26,14 @@ function About() {
                 <div className="row position-relative">
                 <div className="col-lg-7 about-img" style={{backgroundImage: `url(${icecream})`}}></div>
                   <div className="col-lg-7">
-                    <h2>Consequatur eius et magnam</h2>
+                 
                     <div className="our-story">
-                      <h4>Est 1988</h4>
-                      <h3>Our Story</h3>
-                      <p>Inventore aliquam beatae at et id alias. Ipsa dolores amet consequuntur minima quia maxime autem. Quidem id sed ratione. Tenetur provident autem in reiciendis rerum at dolor. Aliquam consectetur laudantium temporibus dicta minus dolor.</p>
-                     
-                      <p>Vitae autem velit excepturi fugit. Animi ad non. Eligendi et non nesciunt suscipit repellendus porro in quo eveniet. Molestias in maxime doloremque.</p>
-                      
+                    <h3>Welcome to Our Blog!</h3>
+                      <p>Hello and welcome to our blog! We're thrilled to have you here. Our blog is your go-to destination for informative and engaging content covering a wide range of topics across different sectors. Whether you're interested in technology, finance, health, or lifestyle, we've got you covered!</p>
+                      <h3>Our Mission!</h3>
+                      <p>Our mission is simple: to provide valuable information and insights that empower our readers to make informed decisions and lead fulfilling lives. We believe that knowledge is power, and we're dedicated to sharing knowledge across all sectors to help you navigate the complexities of today's world.</p>
+                      <h3>What We Cover</h3>
+                      <p>From the latest trends in technology to tips for managing your finances, we cover a diverse range of topics to cater to all interests</p>
                     </div>
                   </div>
                 </div>
