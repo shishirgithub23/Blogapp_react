@@ -20,6 +20,7 @@ import { ToastContainer } from "react-toastify";
 import Unauthorized from "./Unauthorized";
 import NotificationComponent from "./Notification/NotificationComponent";
 import axios from "axios";
+import ForgetPasswordManage from "./authpage/ForgetPassword/ForgetPasswordManage";
 
 export const AppContext=createContext();
 
@@ -76,6 +77,7 @@ const App = () => {
               <Route path="/Admin" element={<AddAdmin />} />
               <Route path="/unauthorized" element={<Unauthorized />} />
               <Route path="/notification" element={<NotificationComponent />} />
+              <Route path="/forgetpassword" element={<ForgetPasswordManage />} />
             </Routes>
         </Router>
       </AppContext.Provider>

@@ -49,7 +49,11 @@ function Login() {
     }).finally(function(){
       setSubmitting(false);
     })
-}
+  }
+
+  const HandleForgetPassword =()=>{
+      navigate('/forgetpassword')
+  } 
 
   return (
     <div>
@@ -98,7 +102,7 @@ function Login() {
                                 Login
                               </button>
                             </div>
-                            <a className="small text-muted" href="#!">Forgot password?</a>
+                            <a className="small text-muted" onClick={()=>{HandleForgetPassword()}}>Forgot password?</a>
                             <p className="mb-5 pb-lg-2" style={{color: '#393f81'}}>Don't have an account? 
 
                             <Link to="/Register"> <a  style={{color: '#393f81'}}>Register here</a></Link>
