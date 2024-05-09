@@ -19,8 +19,7 @@ var initialValues={
 const ShowNotificationModal  =({CloseNotificationModal})=>{
 
   var {notification}=useContext(AppContext)
-  console.log("hero")
-  console.log(notification)
+
 
   return(
     <>
@@ -29,13 +28,28 @@ const ShowNotificationModal  =({CloseNotificationModal})=>{
             <div class="row">
               <div class="col-md-12">
                    {
-                    notification && notification.map((x,i)=>{
-                      alert(x.notification_text)
-                      // <tr>
-                      //   <td>{x.notification_text}</td>
-                      //   <td>{x.notification_refernece}</td>
-                      // </tr>
-                    })
+                    notification && notification.map((x,i)=>(
+                    <table className="table table-striped">
+                      <thead>
+                        {/* <tr>
+                          <th scope="col" colSpan={5} style={{textAlign:"center"}}></th>
+                        </tr> */}
+                      </thead>
+                      <tbody>
+
+                        <tr>
+                          <th scope="row">{i+1}</th>
+                          <td colSpan={4}>{x.notification_text}</td>
+                        </tr>
+                      </tbody>
+                    </table>
+
+                     // alert(x.notification_text)
+                      // <div>
+                      //   <h1>{x.notification_text}</h1>
+                      //   <p>{x.notification_refernece}</p>
+                      // </div>
+                    ))
                    }
               </div>
             </div>
