@@ -77,7 +77,7 @@ function ShowBlog() {
       setPosts(response.data)
 
     })).catch(function(error){
-        console.log(error)  
+      //  console.log(error)  
     }) 
   }
 
@@ -131,7 +131,7 @@ function ShowBlog() {
       toast.success("Data deleted successfully.")
       LoadAllBlogs()
     })).catch(function(error){
-        console.log(error)
+      //  console.log(error)
     }) 
   }
 

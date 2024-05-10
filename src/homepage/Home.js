@@ -48,7 +48,7 @@ const Home = () => {
           {
             navigate("/login")
           }
-          console.log(error) 
+         // console.log(error) 
       }
       
     }) 
@@ -67,7 +67,7 @@ const Home = () => {
           {
             navigate("/login")
           }
-        console.log(error);
+      //  console.log(error);
       })
       .finally(function () {
       });
@@ -112,7 +112,7 @@ const Home = () => {
         {
           navigate("/login")
         }
-          console.log(error)
+          //console.log(error)
       }) 
     }
     else
@@ -131,7 +131,7 @@ const Home = () => {
         {
           navigate("/login")
         }
-        console.log(error)
+       // console.log(error)
       })
     }
   }

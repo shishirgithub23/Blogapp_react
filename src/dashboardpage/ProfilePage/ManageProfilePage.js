@@ -42,7 +42,7 @@ function ManageProfilePage({closeUserProfileModal}) {
       //console.log(response.data)
       setValues(response.data)
     })).catch(function(error){
-        console.log(error)
+        //console.log(error)
     }) 
   }
 
@@ -63,7 +63,6 @@ function ManageProfilePage({closeUserProfileModal}) {
     initialValues,
     validationSchema: ProfileSchema,
     onSubmit: (values, action) => {
-      console.log("hello  ")
       HandleSubmit(values, action);
     },
   });
@@ -85,7 +84,7 @@ function ManageProfilePage({closeUserProfileModal}) {
        closeUserProfileModal()
        //console.log(response);
     })).catch(function(error){
-        console.log(error)
+       // console.log(error)
     }) 
   };
 
@@ -132,7 +131,7 @@ function ManageProfilePage({closeUserProfileModal}) {
          localStorage.clear();
          window.location.reload();
       })).catch(function(error){
-          console.log(error)
+        //  console.log(error)
       }).finally(function(){
         CancelToast()
       })

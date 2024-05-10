@@ -30,14 +30,14 @@ function Login() {
       data:input_data
     }).then((function(response)
     {
-      console.log(response)
+
       toast.success("User Logged In Successfully.",{autoClose:900})
       localStorage.token=response.data.token
       localStorage.role=response.data.role
-      console.log(localStorage)
+      
       navigate("/")
     })).catch(function(error){
-      console.log(error)
+     // console.log(error)
       if(error!=undefined && error!=null)
         {
           if(error.response.data.response_status=="1")
@@ -74,10 +74,7 @@ function Login() {
                         validationSchema={LoginSchema}
                         onSubmit={(values, { setSubmitting }) => {
                           HandleLogin(values,setSubmitting)
-                          // setTimeout(() => {
-                          //   alert(JSON.stringify(values, null, 2));
-                          //   setSubmitting(false);
-                          // }, 400);
+                         
                         }}
                       >
                         {({ isSubmitting }) => (

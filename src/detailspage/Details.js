@@ -12,6 +12,8 @@ import axios from "axios";
 import { GetDateTime } from "../Library/Common";
 import { useFormik } from "formik";
 import * as Yup from "yup";
+import {toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 const CommentSchema=Yup.object({
   // name:Yup.string().required("Please Enter Your Name."),
@@ -52,7 +54,7 @@ const Details = () => {
       {
         setRecentPosts(response.data)
       })).catch(function(error){
-          console.log(error)
+         // console.log(error)
       })
   }
 
@@ -67,7 +69,7 @@ const Details = () => {
       // console.log(response.data)
       setCategories(response.data)
     })).catch(function(error){
-        console.log(error)
+        //console.log(error)
     }) 
   }
 
@@ -84,7 +86,7 @@ const Details = () => {
       {
         setPosts(response.data)
       })).catch(function(error){
-          console.log(error)
+          //console.log(error)
       }) 
     }
   }
@@ -130,11 +132,11 @@ const Details = () => {
       data:input_data
     }).then((function(response)
     {
-      alert("Blog Commented success!!")
+      toast.success("Blog comment success!!",{autoClose:2000})
       resetForm()
       LoadBlogData()
     })).catch(function(error){
-        console.log(error)
+       // console.log(error)
     }) 
   }
 
@@ -162,7 +164,7 @@ const Details = () => {
               {
                // navigate("/login")
               }
-              console.log(error)
+              //console.log(error)
           }
       }) 
     }
@@ -184,15 +186,13 @@ const Details = () => {
             {
              // navigate("/login")
             }
-            console.log(error)
+          //  console.log(error)
         }
       })
     }
   }
 
   const HandleCommentLikeDislike =(commentid,click)=>{
-  alert(commentid)
-  alert(click)
     if(click=="like")
     {
       axios({
@@ -210,7 +210,6 @@ const Details = () => {
               {
                // navigate("/login")
               }
-              console.log(error)
           }
       }) 
     }
@@ -232,7 +231,6 @@ const Details = () => {
             {
              // navigate("/login")
             }
-            console.log(error)
         }
       })
     }
