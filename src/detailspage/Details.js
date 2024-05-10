@@ -36,6 +36,7 @@ const Details = () => {
 
   const [categories,setCategories]=useState([])
   const [recentPosts,setRecentPosts]=useState([])
+  const [recentPostsBackup,setRecentPostsBackup]=useState([])
 
   //Ref
   const ref_comment=useRef();
@@ -56,6 +57,7 @@ const Details = () => {
       }).then((function(response)
       {
         setRecentPosts(response.data)
+        setRecentPostsBackup(response.data)
       })).catch(function(error){
          // console.log(error)
       })
@@ -244,6 +246,13 @@ const Details = () => {
     LoadBlogData(blogId)
   }
 
+  const FilterRecentPostByCategoryId=(categoryid)=>{
+    if(parseInt(categoryid || 0)>0)
+    {
+      setRecentPosts(recentPostsBackup.filter(x=>parseInt(x.CategoryId)==parseInt(categoryid)))
+    }
+  }
+
   return (
     <div>
       <NavBar />
@@ -403,11 +412,11 @@ const Details = () => {
                 <div className="col-lg-4">
                   <div className="sidebar">
                     <div className="sidebar-item categories">
-                      <h3 className="sidebar-title">Categories</h3>
+                      <h3 className="sidebar-title">Filter Post {">>"}  Categories</h3>
                       <ul className="mt-3">
                         {categories.map((category, index) => (
                           <li key={index}>
-                            <a href="#">
+                            <a onClick={()=>{FilterRecentPostByCategoryId(category.categoryId)}}>
                               {category.name}{" "}
                               <span>({category.postNumber})</span>
                             </a>
