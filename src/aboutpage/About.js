@@ -2,9 +2,11 @@ import NavBar from "../components/layout/Navbar";
 import React, { useState } from "react";
 import icecream from "../image/bg.avif";
 import Footer from "../components/layout/Footer";
-
+import { useNavigate } from "react-router-dom";
 import "./about.css";
 function About() {
+  
+  var navigate = useNavigate()
   return (
     <div>
       <NavBar />
@@ -15,7 +17,7 @@ function About() {
               <div className="container position-relative d-flex flex-column align-items-center" data-aos="fade">
                 <h2>About</h2>
                 <ol>
-                  <li><a href="index.html">Home</a></li>
+                  <li><a onClick={()=>{navigate("/")}}>Home</a></li>
                   <li>About</li>
                 </ol>
               </div>

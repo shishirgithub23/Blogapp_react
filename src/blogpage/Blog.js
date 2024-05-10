@@ -113,7 +113,7 @@ function Blog() {
             <h2>Blog</h2>
             <ol>
               <li>
-                <a href="index.html">Home</a>
+                <a onClick={()=>{navigate('/')}}>Home</a>
               </li>
               <li>Blog</li>
             </ol>
