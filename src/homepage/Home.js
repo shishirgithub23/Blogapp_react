@@ -10,6 +10,7 @@ import { BiLike, BiDislike } from "react-icons/bi";
 import axios from "axios";
 import { GetDateTime } from "../Library/Common";
 import { useNavigate } from 'react-router-dom';
+import { width } from "@fortawesome/free-solid-svg-icons/fa0";
 
 
 const Home = () => {
@@ -56,7 +57,7 @@ const Home = () => {
   
   const LoadAllCategory=()=>{
     axios
-      .get(localStorage.api_url+"api/v1/Category")
+      .get(localStorage.api_url+"api/v1/Category/getallcategorieshome")
       .then(function (response) {
         setCategory(response.data || []);
         setCategoryBackup(response.data || []);
@@ -188,7 +189,7 @@ const Home = () => {
                 key={index}
                 onClick={() => handleCategoryClick(cat.categoryId)}
               >
-                {cat.categoryName}
+                <p>{cat.categoryName}</p>
               </li>
             ))}
         </ul>
