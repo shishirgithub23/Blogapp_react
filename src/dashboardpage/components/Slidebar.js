@@ -61,8 +61,8 @@ function Slidebar() {
           {/* Add close button logic here */}
         </div>
         <div className="profile">
-          <img src={icecream} alt />
-          <h3>admin</h3>
+          {/* <img src={icecream} alt /> */}
+          <h3>Dashboard</h3>
         </div>
 
         <nav className={menuActive? "navbar1 active" : "navbar1"}>
@@ -108,7 +108,7 @@ function Slidebar() {
                 className={location.pathname === "/"? "active" : "nav-link scrollto"}
               >
                 <i className="fas fa-home" />
-                <span>Admin</span>
+                <span>Users</span>
               </a>
             </Link>
           <Link to="/Category">

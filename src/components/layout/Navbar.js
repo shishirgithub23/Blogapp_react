@@ -319,7 +319,7 @@ const NavBar = () => {
           <>
             <li class="nav-item dropdown">
                 <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                User
+                {localStorage.role || 'USER'}
                 </a>
                 <div class="dropdown-menu" aria-labelledby="navbarDropdown">
                   <a className="dropdown-item" onClick={()=>{setShowUserProfileModal(true)}}>User Profile</a>
