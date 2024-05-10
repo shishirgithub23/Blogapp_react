@@ -28,7 +28,7 @@ function Blog() {
       // console.log(response.data)
       setPosts(response.data)
     })).catch(function(error){
-        console.log(error)
+      //  console.log(error)
     }) 
   }
 
@@ -63,13 +63,13 @@ function Blog() {
           LoadBlog()
           // console.log(response.data)
         })).catch(function(error){
-          if(error.response!=undefined)
+          if(error!=undefined && error!=null)
             {
               if(error.response?.status==401)
                 {
                   navigate("/login")
                 }
-                console.log(error)
+               // console.log(error)
             }
         }) 
       }
@@ -85,11 +85,14 @@ function Blog() {
           LoadBlog()
           // console.log(response.data)
         })).catch(function(error){
-          if(error.response?.status==401)
-          {
-            navigate("/login")
-          }
-          console.log(error)
+          if(error!=undefined && error!=null)
+            {
+              if(error.response?.status==401)
+                {
+                  navigate("/login")
+                }
+            }
+          //console.log(error)
         })
       }
     }

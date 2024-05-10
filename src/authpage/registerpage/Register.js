@@ -4,6 +4,8 @@ import * as Yup from 'yup';
 import { Link } from "react-router-dom"; // Import the Link component from react-router-dom
 import axios from 'axios';
 import { useNavigate } from "react-router-dom";
+import {toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 const RegisterSchema = Yup.object().shape({
   email: Yup.string()
@@ -38,10 +40,11 @@ function Register() {
           data:input_data
         }).then((function(response)
         {
-          alert("User Registered Successfully.")
+          toast.success("User Registered Successfully.",{autoClose:1900})
+          
           navigate("/login")
         })).catch(function(error){
-            console.log(error)
+            //console.log(error)
         }) 
     }
 
@@ -64,10 +67,6 @@ function Register() {
                         validationSchema={RegisterSchema}
                         onSubmit={(values, { setSubmitting }) => {
                             HandleSignup(values)
-                            // setTimeout(() => {
-                            // alert(JSON.stringify(values, null, 2));
-                            // setSubmitting(false);
-                            // }, 400);
                         }}
                         >
                         {({ isSubmitting }) => (

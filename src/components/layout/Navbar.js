@@ -49,12 +49,6 @@ const ShowNotificationModal  =({CloseNotificationModal})=>{
                         </tr>
                       </tbody>
                     </table>
-
-                     // alert(x.notification_text)
-                      // <div>
-                      //   <h1>{x.notification_text}</h1>
-                      //   <p>{x.notification_refernece}</p>
-                      // </div>
                     ))
                    }
               </div>
@@ -110,9 +104,7 @@ const ChangePasswordModal =({closePasswordChangeModal})=>{
     {
        closePasswordChangeModal(true)
        toast.success("Password Changed Successfully",{autoClose:2000})
-       //alert("Password Changed Successfully.")
     })).catch(function(error){
-        console.log(error)
     }) 
   };
 

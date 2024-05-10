@@ -40,7 +40,7 @@ function Blog() {
         ddlCategory: response.data.categories || [],
       }))
     })).catch(function(error){
-        console.log(error)
+       // console.log(error)
     })
   }
 
@@ -60,7 +60,7 @@ function Blog() {
       }).then((function(response)
       {
         var data= response.data[0];
-        console.log(data)
+       
         setValues((p)=>({
           ...p,
           title: data.blogTitle,
@@ -70,7 +70,7 @@ function Blog() {
           imageName:data.image,
         }))
       })).catch(function(error){
-          console.log(error)
+         // console.log(error)
       }) 
     }
   },[blogId])
@@ -126,12 +126,17 @@ function Blog() {
         toast.success("Blog Created Successfully.")
         resetForm()
       })).catch(function(error){
-        console.log(error)
-        if(error.response.data.response_status=="1")
-        {
-          toast.error(error.response.data.Message,{autoClose:900})
-          return
-        }
+
+        if(error!=undefined && error!=null)
+          {
+            // console.log(error)
+            if(error.response.data.response_status=="1")
+            {
+              toast.error(error.response.data.Message,{autoClose:900})
+              return
+            }
+          }
+
       }) 
     }
     else
@@ -148,12 +153,16 @@ function Blog() {
         toast.success("Blog Updated Successfully.")
         navigate('/ShowBlog')
       })).catch(function(error){
-        console.log(error)
-        if(error.response.data.response_status=="1")
+        if(error!=undefined && error!=null)
         {
-          toast.error(error.response.data.Message,{autoClose:2000})
-          return
+          if(error.response.data.response_status=="1")
+          {
+            toast.error(error.response.data.Message,{autoClose:2000})
+            return
+          }
         }
+        //console.log(error)
+       
       }) 
     }
     

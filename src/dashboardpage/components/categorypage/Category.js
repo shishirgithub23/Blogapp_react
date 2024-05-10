@@ -24,15 +24,18 @@ function Category() {
       data:{}
     }).then((function(response)
     {
-      console.log(response.data)
       setData(response.data)
     })).catch(function(error){
-      console.log(error)
-      if(error.response.data.response_status=="1")
+      if(error!=undefined && error!=null)
       {
-        toast.error(error.response.data.Message,{autoClose:900})
-        return
+        if(error.response.data.response_status=="1")
+          {
+            toast.error(error.response.data.Message,{autoClose:900})
+            return
+          }
       }
+    //  console.log(error)
+      
     }) 
   }
 
@@ -81,12 +84,16 @@ function Category() {
           resetForm()
           LoadCategories()
         })).catch(function(error){
-          console.log(error)
-          if(error.response.data.response_status=="1")
-          {
-            toast.error(error.response.data.Message,{autoClose:900})
-            return
-          }
+          if(error!=undefined && error!=null)
+            {
+                //  console.log(error)
+              if(error.response.data.response_status=="1")
+                {
+                  toast.error(error.response.data.Message,{autoClose:900})
+                  return
+                }
+            }
+        
         }) 
       }
       else
@@ -103,12 +110,16 @@ function Category() {
           resetForm()
           LoadCategories()
         })).catch(function(error){
-          console.log(error)
-          if(error.response.data.response_status=="1")
-          {
-            toast.error(error.response.data.Message,{autoClose:900})
-            return
-          }
+          if(error!=undefined && error!=null)
+            {
+               //  console.log(error)
+            if(error.response.data.response_status=="1")
+            {
+              toast.error(error.response.data.Message,{autoClose:900})
+              return
+            }
+            }
+       
         }) 
       }
      
@@ -164,12 +175,15 @@ function Category() {
       resetForm()
       LoadCategories()
     })).catch(function(error){
-      console.log(error)
-      if(error.response.data.response_status=="1")
-      {
-         toast.error(error.response.data.Message,{autoClose:900})
-         return
-      }
+      if(error!=undefined && error!=null)
+        {
+             // console.log(error)
+          if(error.response.data.response_status=="1")
+            {
+              toast.error(error.response.data.Message,{autoClose:900})
+              return
+            }
+        }
     }) 
   }
 
