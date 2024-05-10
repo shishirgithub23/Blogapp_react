@@ -14,7 +14,7 @@ import { useFormik } from "formik";
 import * as Yup from "yup";
 import {toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-
+import { useNavigate } from "react-router-dom";
 const CommentSchema=Yup.object({
   // name:Yup.string().required("Please Enter Your Name."),
   // email:Yup.string().required("Please Enter Email").email("Please Enter Valid Email"),
@@ -23,12 +23,14 @@ const CommentSchema=Yup.object({
 
 const Details = () => {
 
+  var navigate = useNavigate()
+
   const initialValues={
     comment:''
   }
 
   const location=useLocation();
-  const blogId=location.state ;
+  const [blogId,setBlogId]=useState(location.state || 0)
   
   const [posts,setPosts]=useState([])
 
@@ -45,6 +47,7 @@ const Details = () => {
 
 
   const LoadRecentBlogPostData =()=>{
+    
       axios({
         method:"GET",
         url:localStorage.api_url+"api/v1/blog/GetRecentBlogPost",
@@ -74,7 +77,7 @@ const Details = () => {
   }
 
 
-  const LoadBlogData=()=>{
+  const LoadBlogData=(blogId)=>{
     if((blogId || 0) >0)
     {
       axios({
@@ -92,7 +95,7 @@ const Details = () => {
   }
 
   useEffect(()=>{
-    LoadBlogData()
+    LoadBlogData(blogId)
   },[blogId])
 
 
@@ -134,7 +137,7 @@ const Details = () => {
     {
       toast.success("Blog comment success!!",{autoClose:2000})
       resetForm()
-      LoadBlogData()
+      LoadBlogData(blogId)
     })).catch(function(error){
        // console.log(error)
     }) 
@@ -156,7 +159,7 @@ const Details = () => {
         data:{}
       }).then((function(response)
       {
-        LoadBlogData()
+        LoadBlogData(blogId)
       })).catch(function(error){
         if(error.response!=undefined)
           {
@@ -177,7 +180,7 @@ const Details = () => {
         data:{}
       }).then((function(response)
       {
-         LoadBlogData()
+         LoadBlogData(blogId)
         // console.log(response.data)
       })).catch(function(error){
         if(error.response!=undefined)
@@ -202,7 +205,7 @@ const Details = () => {
         data:{}
       }).then((function(response)
       {
-        LoadBlogData()
+        LoadBlogData(blogId)
       })).catch(function(error){
         if(error.response!=undefined)
           {
@@ -222,7 +225,7 @@ const Details = () => {
         data:{}
       }).then((function(response)
       {
-         LoadBlogData()
+         LoadBlogData(blogId)
         // console.log(response.data)
       })).catch(function(error){
         if(error.response!=undefined)
@@ -234,9 +237,12 @@ const Details = () => {
         }
       })
     }
-
   }
 
+  function demo(blogId){
+    setBlogId(blogId || 0)
+    LoadBlogData(blogId)
+  }
 
   return (
     <div>
@@ -254,7 +260,7 @@ const Details = () => {
             <h2>Blog Details</h2>
             <ol>
               <li>
-                <a href="index.html">Home</a>
+                <a onClick={()=>{navigate('/')}}>Home</a>
               </li>
               <li>Blog Details</li>
             </ol>
@@ -415,7 +421,8 @@ const Details = () => {
                       {recentPosts.map((recentPosts) => (
 
                       <div className="mt-3">
-             
+                        
+                      <a onClick={()=>{demo(recentPosts.BlogId)}}>
                         <div className="post-item mt-3">
                           <img src={localStorage.api_url+recentPosts.image} className="img-fluid" alt={"Blog Image"}/>
                           {/* <img src={recentPosts.image} alt /> */}
@@ -426,6 +433,8 @@ const Details = () => {
                             <time dateTime={recentPosts.date}> {GetDateTime(recentPosts.date)}</time>
                           </div>
                         </div>
+                      </a>
+                        
                       </div>
                      ))}
 

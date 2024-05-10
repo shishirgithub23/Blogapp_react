@@ -27,6 +27,12 @@ function Blog() {
   });
 
 
+  const  ClearInputField=()=>{
+    setValues(
+      initialValues
+    )
+  }
+
   const LoadDDL =()=>{
     axios({
       method:"GET",
@@ -125,6 +131,7 @@ function Blog() {
       {
         toast.success("Blog Created Successfully.")
         resetForm()
+        ClearInputField()
       })).catch(function(error){
 
         if(error!=undefined && error!=null)
@@ -161,8 +168,7 @@ function Blog() {
             return
           }
         }
-        //console.log(error)
-       
+        //console.log(error)   
       }) 
     }
     
@@ -250,7 +256,7 @@ function Blog() {
                     onChange={(event) =>
                       {
                         setFieldValue('image', event.currentTarget.files[0])
-                        setFieldValue('imageName',event.currentTarget.files[0].name)
+                        setFieldValue('imageName',event.currentTarget?.files[0]?.name)
                       }
                     }
                     onBlur={handleBlur}
