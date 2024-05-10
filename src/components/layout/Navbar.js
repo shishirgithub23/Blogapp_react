@@ -28,8 +28,8 @@ const ShowNotificationModal  =({CloseNotificationModal})=>{
           <div>
             <div class="row" style={{fontSize:"20px"}}>
               <div class="col-md-12">
-                   {
-                    notification && notification.map((x,i)=>(
+                   
+                    
                     <table className="table table-striped">
                       <thead>
                         {/* <tr>
@@ -37,7 +37,8 @@ const ShowNotificationModal  =({CloseNotificationModal})=>{
                         </tr> */}
                       </thead>
                       <tbody>
-
+                      
+                      {notification && notification.length>0?notification.map((x,i)=>(
                         <tr>
                           <th scope="row">{i+1}</th>
                           <td colSpan={4}>
@@ -47,10 +48,13 @@ const ShowNotificationModal  =({CloseNotificationModal})=>{
                             }
                            </td>
                         </tr>
+                        )):<>
+                        <tr>
+                          <td style={{textAlign:"center"}} colSpan={5}>Noting to show!</td>
+                        </tr>
+                        </>}
                       </tbody>
                     </table>
-                    ))
-                   }
               </div>
             </div>
           </div>
